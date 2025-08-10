@@ -1,0 +1,9 @@
+<ul>
+  <li *ngFor="let msg of messages" data-cy="message-item">
+    <span *ngIf="editing !== msg">{{ msg.content }}</span>
+    <input *ngIf="editing === msg" [(ngModel)]="editContent" data-cy="edit-input">
+    <button *ngIf="editing !== msg" (click)="startEdit(msg)" data-cy="edit-btn">Edit</button>
+    <button *ngIf="editing === msg" (click)="save(msg)" data-cy="save-btn">Save</button>
+    <button (click)="delete(msg)" data-cy="delete-btn">Delete</button>
+  </li>
+</ul>
