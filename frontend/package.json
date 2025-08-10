@@ -1,0 +1,17 @@
+{
+  "name": "frontend",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "start": "echo 'start frontend'",
+    "test": "echo 'No frontend tests'"
+  },
+  "dependencies": {
+    "@angular/common": "^18.0.0",
+    "@angular/core": "^18.0.0",
+    "rxjs": "^7.8.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}

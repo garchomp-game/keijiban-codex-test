@@ -2,13 +2,17 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "es2018",
-    "moduleResolution": "node",
+    "declaration": false,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "outDir": "dist",
     "rootDir": "src",
+    "baseUrl": "./",
+    "moduleResolution": "node",
     "esModuleInterop": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
     "strict": false
   }
 }
