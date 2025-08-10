@@ -24,6 +24,12 @@ jobs:
           node-version: ${{ matrix['node-version'] }}
           cache: 'npm'
           cache-dependency-path: ${{ matrix.component }}/package-lock.json
+      - name: Install system dependencies (frontend only)
+        if: matrix.component == 'frontend'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y chromium-browser
+          export CHROME_BIN=/usr/bin/chromium-browser
       - name: Install dependencies
         run: npm ci
       - name: Lint

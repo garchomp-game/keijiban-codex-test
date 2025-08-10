@@ -9,6 +9,7 @@
     "start:prod": "node dist/main.js",
     "build": "tsc",
     "test": "jest",
+    "lint": "echo 'No linting configured'",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev --name init"
   },
