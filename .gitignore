@@ -1,0 +1,11 @@
+<<<<<<< HEAD
+backend/node_modules
+backend/dist
+backend/coverage
+=======
+/backend/node_modules
+/backend/prisma/dev.db
+/backend/prisma/*.db-journal
+node_modules
+package-lock.json
+>>>>>>> main
