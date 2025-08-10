@@ -1,0 +1,22 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "generate:api": "openapi-typescript ../docs/openapi.yaml --output src/types/api.ts",
+    "build": "tsc",
+    "test": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "openapi-typescript": "^7.8.0",
+    "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "socket.io-client": "^4.8.1"
+  }
+}
