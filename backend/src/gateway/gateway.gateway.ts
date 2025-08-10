@@ -5,9 +5,12 @@ import {
   WebSocketServer,
   ConnectedSocket,
 } from '@nestjs/websockets';
+import { UseGuards } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
 import { MessagesService } from '../messages/messages.service';
+import { WsJwtAuthGuard } from '../auth/guards/ws-jwt-auth.guard';
 
+@UseGuards(WsJwtAuthGuard)
 @WebSocketGateway({ namespace: '/ws' })
 export class GatewayGateway {
   @WebSocketServer()
