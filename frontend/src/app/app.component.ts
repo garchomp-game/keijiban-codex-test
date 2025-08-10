@@ -2,7 +2,9 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-root',
-  standalone: true,
-  template: '<router-outlet></router-outlet>',
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.css'
 })
-export class AppComponent {}
+export class AppComponent {
+  title = 'frontend';
+}

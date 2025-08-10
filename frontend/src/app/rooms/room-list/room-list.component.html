@@ -1,0 +1,5 @@
+<ul>
+  <li *ngFor="let room of rooms" data-cy="room-item">
+    <a [routerLink]="[room.id]">{{ room.name }}</a>
+  </li>
+</ul>
