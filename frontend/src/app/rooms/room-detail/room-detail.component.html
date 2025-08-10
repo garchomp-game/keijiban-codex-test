@@ -1,0 +1,4 @@
+<h2>{{ room?.name }}</h2>
+<input [(ngModel)]="newMessage" placeholder="New message" data-cy="new-message">
+<button (click)="addMessage()" data-cy="add-message">Add</button>
+<app-message-list [messages]="messages" (update)="updateMessage($event)" (remove)="deleteMessage($event)"></app-message-list>
