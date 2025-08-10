@@ -1,0 +1,858 @@
+type: collection.insomnia.rest/5.0
+name: Realtime Board API
+meta:
+  id: fld_1989247aacc3fa155ff0a32c8344bae8
+  created: 1754800827087
+  modified: 1754800827087
+  isPrivate: false
+  description: ''
+collection:
+  - name: default
+    description: ''
+    environment: {}
+    environmentPropertyOrder: {}
+    scripts:
+      preRequest: ''
+      afterResponse: ''
+    authentication: {}
+    headers: []
+    meta:
+      id: fld_1989247aacc3fa155ff4f947b69f5e77
+      created: 1754800827087
+      modified: 1754800827087
+      isPrivate: false
+      description: ''
+      sortKey: -1754800827087
+    children:
+      - name: /auth/login
+        description: ''
+        environment: {}
+        environmentPropertyOrder: {}
+        scripts:
+          preRequest: ''
+          afterResponse: ''
+        authentication: {}
+        headers: []
+        meta:
+          id: fld_1989247aacc3fa155ffd29695b2e59da
+          created: 1754800827087
+          modified: 1754800827087
+          isPrivate: false
+          description: ''
+          sortKey: -1754800827087
+        children:
+          - name: Login
+            description: ''
+            url: '{{baseUrl}}/auth/login'
+            method: POST
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                 "email": "<string>",
+                 "password": "<string>"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+              - name: Accept
+                value: application/json
+            parameters: []
+            pathParameters: []
+            authentication: {}
+            scripts:
+              preRequest: ''
+              afterResponse: ''
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              rebuildPath: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+            meta:
+              id: req_1989247aacc3fa155ff580ad70efb076
+              created: 1754800827087
+              modified: 1754800827087
+              isPrivate: false
+              description: ''
+              sortKey: -1754800827087
+      - name: /auth/signup
+        description: ''
+        environment: {}
+        environmentPropertyOrder: {}
+        scripts:
+          preRequest: ''
+          afterResponse: ''
+        authentication: {}
+        headers: []
+        meta:
+          id: fld_1989247aacc3fa155ff86329a2db242c
+          created: 1754800827087
+          modified: 1754800827087
+          isPrivate: false
+          description: ''
+          sortKey: -1754800827086
+        children:
+          - name: Sign up
+            description: ''
+            url: '{{baseUrl}}/auth/signup'
+            method: POST
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                 "email": "<string>",
+                 "password": "<string>",
+                 "displayName": "<string>"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+              - name: Accept
+                value: application/json
+            parameters: []
+            pathParameters: []
+            authentication: {}
+            scripts:
+              preRequest: ''
+              afterResponse: ''
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              rebuildPath: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+            meta:
+              id: req_1989247aacc3fa155ff0ed01da37ecec
+              created: 1754800827087
+              modified: 1754800827087
+              isPrivate: false
+              description: ''
+              sortKey: -1754800827087
+      - name: /invites
+        description: ''
+        environment: {}
+        environmentPropertyOrder: {}
+        scripts:
+          preRequest: ''
+          afterResponse: ''
+        authentication: {}
+        headers: []
+        meta:
+          id: fld_1989247aacc3fa155ffa39cb2b670f4b
+          created: 1754800827087
+          modified: 1754800827087
+          isPrivate: false
+          description: ''
+          sortKey: -1754800827085
+        children:
+          - name: Create one-time invite token (admin)
+            description: ''
+            url: '{{baseUrl}}/invites'
+            method: POST
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                 "roomId": "<string>",
+                 "expiresInHours": "<number>"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+              - name: Accept
+                value: application/json
+            parameters: []
+            pathParameters: []
+            authentication: {}
+            scripts:
+              preRequest: ''
+              afterResponse: ''
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              rebuildPath: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+            meta:
+              id: req_1989247aacc3fa155ff086f6759333a9
+              created: 1754800827087
+              modified: 1754800827087
+              isPrivate: false
+              description: ''
+              sortKey: -1754800827087
+      - name: /invites/accept
+        description: ''
+        environment: {}
+        environmentPropertyOrder: {}
+        scripts:
+          preRequest: ''
+          afterResponse: ''
+        authentication: {}
+        headers: []
+        meta:
+          id: fld_1989247aacc3fa155ffa31da8eaee37b
+          created: 1754800827087
+          modified: 1754800827087
+          isPrivate: false
+          description: ''
+          sortKey: -1754800827084
+        children:
+          - name: Accept invite link (logged-in)
+            description: ''
+            url: '{{baseUrl}}/invites/accept'
+            method: POST
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                 "token": "<string>"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+            parameters: []
+            pathParameters: []
+            authentication: {}
+            scripts:
+              preRequest: ''
+              afterResponse: ''
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              rebuildPath: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+            meta:
+              id: req_1989247aacc3fa155ff4a82bf43cdab6
+              created: 1754800827087
+              modified: 1754800827087
+              isPrivate: false
+              description: ''
+              sortKey: -1754800827087
+      - name: /messages
+        description: ''
+        environment: {}
+        environmentPropertyOrder: {}
+        scripts:
+          preRequest: ''
+          afterResponse: ''
+        authentication: {}
+        headers: []
+        meta:
+          id: fld_1989247aacc3fa155ff767263036fb13
+          created: 1754800827087
+          modified: 1754800827087
+          isPrivate: false
+          description: ''
+          sortKey: -1754800827083
+        children:
+          - name: Post message
+            description: ''
+            url: '{{baseUrl}}/messages'
+            method: POST
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                 "roomId": "<string>",
+                 "body": "<string>",
+                 "clientMsgId": "<string>"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+              - name: Accept
+                value: application/json
+            parameters: []
+            pathParameters: []
+            authentication: {}
+            scripts:
+              preRequest: ''
+              afterResponse: ''
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              rebuildPath: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+            meta:
+              id: req_1989247aacc3fa155ffe5a110f1c4a1f
+              created: 1754800827087
+              modified: 1754800827087
+              isPrivate: false
+              description: ''
+              sortKey: -1754800827087
+      - name: /messages/:messageId
+        description: ''
+        environment: {}
+        environmentPropertyOrder: {}
+        scripts:
+          preRequest: ''
+          afterResponse: ''
+        authentication: {}
+        headers: []
+        meta:
+          id: fld_1989247aacc3fa155ffb8732c99bb7a0
+          created: 1754800827087
+          modified: 1754800827087
+          isPrivate: false
+          description: ''
+          sortKey: -1754800827082
+        children:
+          - name: Delete own message
+            description: ''
+            url: '{{baseUrl}}/messages/:messageId'
+            method: DELETE
+            body: {}
+            headers: []
+            parameters: []
+            pathParameters: []
+            authentication: {}
+            scripts:
+              preRequest: ''
+              afterResponse: ''
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              rebuildPath: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+            meta:
+              id: req_1989247aacc3fa155ff0937284ef6547
+              created: 1754800827087
+              modified: 1754800827087
+              isPrivate: false
+              description: ''
+              sortKey: -1754800827087
+      - name: /messages/:messageId
+        description: ''
+        environment: {}
+        environmentPropertyOrder: {}
+        scripts:
+          preRequest: ''
+          afterResponse: ''
+        authentication: {}
+        headers: []
+        meta:
+          id: fld_1989247aacc3fa155ff9951fc4996ce4
+          created: 1754800827087
+          modified: 1754800827087
+          isPrivate: false
+          description: ''
+          sortKey: -1754800827081
+        children:
+          - name: Edit own message
+            description: ''
+            url: '{{baseUrl}}/messages/:messageId'
+            method: PATCH
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                 "body": "<string>"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+              - name: Accept
+                value: application/json
+            parameters: []
+            pathParameters: []
+            authentication: {}
+            scripts:
+              preRequest: ''
+              afterResponse: ''
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              rebuildPath: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+            meta:
+              id: req_1989247aacc3fa155ffa10dcdf7d2575
+              created: 1754800827087
+              modified: 1754800827087
+              isPrivate: false
+              description: ''
+              sortKey: -1754800827087
+      - name: /rooms
+        description: ''
+        environment: {}
+        environmentPropertyOrder: {}
+        scripts:
+          preRequest: ''
+          afterResponse: ''
+        authentication: {}
+        headers: []
+        meta:
+          id: fld_1989247aacc3fa155ff71c0cfae2719f
+          created: 1754800827087
+          modified: 1754800827087
+          isPrivate: false
+          description: ''
+          sortKey: -1754800827080
+        children:
+          - name: List rooms
+            description: ''
+            url: '{{baseUrl}}/rooms'
+            method: GET
+            body: {}
+            headers:
+              - name: Accept
+                value: application/json
+            parameters:
+              - name: visibility
+                value: ''
+                disabled: true
+            pathParameters:
+              - name: visibility
+                value: ''
+            authentication: {}
+            scripts:
+              preRequest: ''
+              afterResponse: ''
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              rebuildPath: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+            meta:
+              id: req_1989247aacc3fa155ff5d9636da5aae3
+              created: 1754800827087
+              modified: 1754800827087
+              isPrivate: false
+              description: ''
+              sortKey: -1754800827087
+      - name: /rooms
+        description: ''
+        environment: {}
+        environmentPropertyOrder: {}
+        scripts:
+          preRequest: ''
+          afterResponse: ''
+        authentication: {}
+        headers: []
+        meta:
+          id: fld_1989247aacc3fa155ff65f511452c26b
+          created: 1754800827087
+          modified: 1754800827087
+          isPrivate: false
+          description: ''
+          sortKey: -1754800827079
+        children:
+          - name: Create room (admin)
+            description: ''
+            url: '{{baseUrl}}/rooms'
+            method: POST
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                 "name": "<string>",
+                 "description": "<string>",
+                 "visibility": "<string>"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+              - name: Accept
+                value: application/json
+            parameters: []
+            pathParameters: []
+            authentication: {}
+            scripts:
+              preRequest: ''
+              afterResponse: ''
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              rebuildPath: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+            meta:
+              id: req_1989247aacc3fa155ff40ce775cd6b79
+              created: 1754800827087
+              modified: 1754800827087
+              isPrivate: false
+              description: ''
+              sortKey: -1754800827087
+      - name: /rooms/:roomId
+        description: ''
+        environment: {}
+        environmentPropertyOrder: {}
+        scripts:
+          preRequest: ''
+          afterResponse: ''
+        authentication: {}
+        headers: []
+        meta:
+          id: fld_1989247aacc3fa155ff319b8d9962dcc
+          created: 1754800827087
+          modified: 1754800827087
+          isPrivate: false
+          description: ''
+          sortKey: -1754800827078
+        children:
+          - name: Delete room (admin)
+            description: ''
+            url: '{{baseUrl}}/rooms/:roomId'
+            method: DELETE
+            body: {}
+            headers: []
+            parameters: []
+            pathParameters: []
+            authentication: {}
+            scripts:
+              preRequest: ''
+              afterResponse: ''
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              rebuildPath: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+            meta:
+              id: req_1989247aacc3fa155ffbeb5c40b6415a
+              created: 1754800827087
+              modified: 1754800827087
+              isPrivate: false
+              description: ''
+              sortKey: -1754800827087
+      - name: /rooms/:roomId
+        description: ''
+        environment: {}
+        environmentPropertyOrder: {}
+        scripts:
+          preRequest: ''
+          afterResponse: ''
+        authentication: {}
+        headers: []
+        meta:
+          id: fld_1989247aacc3fa155ff31f82561ab873
+          created: 1754800827087
+          modified: 1754800827087
+          isPrivate: false
+          description: ''
+          sortKey: -1754800827077
+        children:
+          - name: Get room detail
+            description: ''
+            url: '{{baseUrl}}/rooms/:roomId'
+            method: GET
+            body: {}
+            headers:
+              - name: Accept
+                value: application/json
+            parameters: []
+            pathParameters: []
+            authentication: {}
+            scripts:
+              preRequest: ''
+              afterResponse: ''
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              rebuildPath: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+            meta:
+              id: req_1989247aacc3fa155ffd425223e86a2b
+              created: 1754800827087
+              modified: 1754800827087
+              isPrivate: false
+              description: ''
+              sortKey: -1754800827087
+      - name: /rooms/:roomId
+        description: ''
+        environment: {}
+        environmentPropertyOrder: {}
+        scripts:
+          preRequest: ''
+          afterResponse: ''
+        authentication: {}
+        headers: []
+        meta:
+          id: fld_1989247aacc3fa155ff310b5fd76f54f
+          created: 1754800827087
+          modified: 1754800827087
+          isPrivate: false
+          description: ''
+          sortKey: -1754800827076
+        children:
+          - name: Update room (admin)
+            description: ''
+            url: '{{baseUrl}}/rooms/:roomId'
+            method: PATCH
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                 "name": "<string>",
+                 "description": "<string>",
+                 "visibility": "<string>",
+                 "isArchived": "<string>"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+              - name: Accept
+                value: application/json
+            parameters: []
+            pathParameters: []
+            authentication: {}
+            scripts:
+              preRequest: ''
+              afterResponse: ''
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              rebuildPath: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+            meta:
+              id: req_1989247aacc3fa155ffdca11dad07c53
+              created: 1754800827087
+              modified: 1754800827087
+              isPrivate: false
+              description: ''
+              sortKey: -1754800827087
+      - name: /rooms/:roomId/members
+        description: ''
+        environment: {}
+        environmentPropertyOrder: {}
+        scripts:
+          preRequest: ''
+          afterResponse: ''
+        authentication: {}
+        headers: []
+        meta:
+          id: fld_1989247aacc3fa155ff37bfb48b00c04
+          created: 1754800827087
+          modified: 1754800827087
+          isPrivate: false
+          description: ''
+          sortKey: -1754800827075
+        children:
+          - name: List members (admin)
+            description: ''
+            url: '{{baseUrl}}/rooms/:roomId/members'
+            method: GET
+            body: {}
+            headers:
+              - name: Accept
+                value: application/json
+            parameters: []
+            pathParameters: []
+            authentication: {}
+            scripts:
+              preRequest: ''
+              afterResponse: ''
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              rebuildPath: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+            meta:
+              id: req_1989247aacc3fa155ffb31eabcf9a982
+              created: 1754800827087
+              modified: 1754800827087
+              isPrivate: false
+              description: ''
+              sortKey: -1754800827087
+      - name: /rooms/:roomId/members
+        description: ''
+        environment: {}
+        environmentPropertyOrder: {}
+        scripts:
+          preRequest: ''
+          afterResponse: ''
+        authentication: {}
+        headers: []
+        meta:
+          id: fld_1989247aacc3fa155ff863a9a9a2fdf9
+          created: 1754800827087
+          modified: 1754800827087
+          isPrivate: false
+          description: ''
+          sortKey: -1754800827074
+        children:
+          - name: Add member (admin)
+            description: ''
+            url: '{{baseUrl}}/rooms/:roomId/members'
+            method: POST
+            body:
+              mimeType: application/json
+              text: |-
+                {
+                 "userId": "<string>"
+                }
+            headers:
+              - name: Content-Type
+                value: application/json
+            parameters: []
+            pathParameters: []
+            authentication: {}
+            scripts:
+              preRequest: ''
+              afterResponse: ''
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              rebuildPath: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+            meta:
+              id: req_1989247aacc3fa155ff7c52ba423e9de
+              created: 1754800827088
+              modified: 1754800827088
+              isPrivate: false
+              description: ''
+              sortKey: -1754800827087
+      - name: /rooms/:roomId/members/:userId
+        description: ''
+        environment: {}
+        environmentPropertyOrder: {}
+        scripts:
+          preRequest: ''
+          afterResponse: ''
+        authentication: {}
+        headers: []
+        meta:
+          id: fld_1989247aacc3fa155ffca6e6258e4516
+          created: 1754800827088
+          modified: 1754800827088
+          isPrivate: false
+          description: ''
+          sortKey: -1754800827073
+        children:
+          - name: Remove member (admin)
+            description: ''
+            url: '{{baseUrl}}/rooms/:roomId/members/:userId'
+            method: DELETE
+            body: {}
+            headers: []
+            parameters: []
+            pathParameters: []
+            authentication: {}
+            scripts:
+              preRequest: ''
+              afterResponse: ''
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              rebuildPath: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+            meta:
+              id: req_1989247aacc3fa155ffe42020029431e
+              created: 1754800827088
+              modified: 1754800827088
+              isPrivate: false
+              description: ''
+              sortKey: -1754800827088
+      - name: /rooms/:roomId/messages
+        description: ''
+        environment: {}
+        environmentPropertyOrder: {}
+        scripts:
+          preRequest: ''
+          afterResponse: ''
+        authentication: {}
+        headers: []
+        meta:
+          id: fld_1989247aacc3fa155ff69edaf48c351e
+          created: 1754800827088
+          modified: 1754800827088
+          isPrivate: false
+          description: ''
+          sortKey: -1754800827072
+        children:
+          - name: Get messages (paginate backward)
+            description: ''
+            url: '{{baseUrl}}/rooms/:roomId/messages'
+            method: GET
+            body: {}
+            headers:
+              - name: Accept
+                value: application/json
+            parameters:
+              - name: before
+                value: before_example
+                disabled: true
+              - name: limit
+                value: '56'
+                disabled: true
+            pathParameters:
+              - name: before
+                value: before_example
+              - name: limit
+                value: '56'
+            authentication: {}
+            scripts:
+              preRequest: ''
+              afterResponse: ''
+            settings:
+              renderRequestBody: true
+              encodeUrl: true
+              rebuildPath: true
+              followRedirects: global
+              cookies:
+                send: true
+                store: true
+            meta:
+              id: req_1989247aacc3fa155ffe3d96108e1090
+              created: 1754800827088
+              modified: 1754800827088
+              isPrivate: false
+              description: ''
+              sortKey: -1754800827088
+environments:
+  name: Base Environment
+  meta:
+    id: env_2593f134088540ca97b1c43a81ba5ec2
+    created: 1754800827090
+    modified: 1754800827090
+    isPrivate: false
+  data:
+    baseUrl: https://api.example.com/api/v1
+cookieJar:
+  name: Cookie Jar
+  meta:
+    id: jar_78ec60d5f70c411bb8bef5ea9218d982
+    created: 1754800827090
+    modified: 1754800827090
+    isPrivate: false
+  cookies: []
