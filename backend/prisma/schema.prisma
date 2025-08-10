@@ -1,0 +1,65 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            Int            @id @default(autoincrement())
+  name          String
+  email         String         @unique
+  messages      Message[]
+  rooms         RoomMember[]
+  invites       Invite[]       @relation("InviteReceiver")
+  sentInvites   Invite[]       @relation("InviteSender")
+  refreshTokens RefreshToken[]
+}
+
+model Room {
+  id       Int        @id @default(autoincrement())
+  name     String
+  messages Message[]
+  members  RoomMember[]
+  invites  Invite[]
+}
+
+model Message {
+  id        Int      @id @default(autoincrement())
+  content   String
+  createdAt DateTime @default(now())
+  roomId    Int
+  userId    Int
+  room      Room     @relation(fields: [roomId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model RoomMember {
+  id     Int  @id @default(autoincrement())
+  roomId Int
+  userId Int
+  role   String
+  room   Room @relation(fields: [roomId], references: [id])
+  user   User @relation(fields: [userId], references: [id])
+}
+
+model Invite {
+  id         Int  @id @default(autoincrement())
+  roomId     Int
+  senderId   Int
+  receiverId Int
+  status     String
+  room       Room @relation(fields: [roomId], references: [id])
+  sender     User @relation("InviteSender", fields: [senderId], references: [id])
+  receiver   User @relation("InviteReceiver", fields: [receiverId], references: [id])
+}
+
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+  token     String   @unique
+  userId    Int
+  expiresAt DateTime
+  user      User     @relation(fields: [userId], references: [id])
+}
