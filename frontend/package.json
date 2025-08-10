@@ -8,7 +8,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "cy:run": "cypress run",
-    "e2e": "start-server-and-test start http://localhost:4200 cy:run"
+    "e2e": "start-server-and-test start http://localhost:4200 cy:run",
+    "generate:api": "openapi-typescript ../docs/openapi.yaml --output src/types/api.ts"
   },
   "private": true,
   "dependencies": {
@@ -22,7 +23,8 @@
     "@angular/router": "^17.3.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.14.3"
+    "zone.js": "~0.14.3",
+    "socket.io-client": "^4.8.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^17.3.17",
@@ -37,6 +39,7 @@
     "karma-jasmine-html-reporter": "~2.1.0",
     "typescript": "~5.4.2",
     "cypress": "^13.6.0",
-    "start-server-and-test": "^2.0.0"
+    "start-server-and-test": "^2.0.0",
+    "openapi-typescript": "^7.8.0"
   }
 }

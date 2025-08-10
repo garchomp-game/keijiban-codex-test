@@ -1,11 +1,14 @@
-<<<<<<< HEAD
+# Node modules
+node_modules/
+package-lock.json
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# Backend
 backend/node_modules
 backend/dist
 backend/coverage
-=======
-/backend/node_modules
 /backend/prisma/dev.db
 /backend/prisma/*.db-journal
-node_modules
-package-lock.json
->>>>>>> main
