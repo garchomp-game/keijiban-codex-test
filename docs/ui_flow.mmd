@@ -1,0 +1,16 @@
+flowchart LR
+  Login[ログイン] --> Rooms[ルーム一覧]
+  Signup[サインアップ] --> Rooms
+  Rooms -->|公開ルーム選択| RoomPublic[ルーム詳細(公開)]
+  Rooms -->|非公開ルーム選択(メンバー)| RoomPrivate[ルーム詳細(非公開)]
+  Rooms --> Profile[プロフィール]
+  Rooms --> AdminRooms[管理: ルーム管理]
+  AdminRooms --> CreateRoom[ルーム作成]
+  AdminRooms --> EditRoom[ルーム編集]
+  AdminRooms --> InviteIssue[招待リンク発行]
+  InviteIssue --> InviteEmail[招待メール送信]
+  InviteLink[招待リンク(24h)] --> Login
+  Login -->|JWT OK & メンバー登録| RoomPrivate
+  RoomPublic <-->|投稿/編集/削除| RoomPublic
+  RoomPrivate <-->|投稿/編集/削除| RoomPrivate
+  RoomPrivate --> Members[メンバー一覧]

@@ -1,0 +1,523 @@
+openapi: 3.0.3
+info:
+  title: Realtime Board API
+  version: 0.1.0
+servers:
+  - url: https://api.example.com/api/v1
+security:
+  - bearerAuth: []
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Problem:
+      type: object
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
+    User:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        displayName:
+          type: string
+        role:
+          type: string
+          enum: [user, moderator, admin]
+    RoomVisibility:
+      type: string
+      enum: [public, private]
+    Room:
+      type: object
+      properties:
+        roomId:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        visibility:
+          $ref: '#/components/schemas/RoomVisibility'
+        isArchived:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    RoomMember:
+      type: object
+      properties:
+        roomId:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        roleInRoom:
+          type: string
+          enum: [owner, admin, member]
+        joinedAt:
+          type: string
+          format: date-time
+    Message:
+      type: object
+      properties:
+        messageId:
+          type: string
+          description: ULID
+        roomId:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        body:
+          type: string
+          maxLength: 4000
+        status:
+          type: string
+          enum: [active, deleted]
+        createdAt:
+          type: string
+          format: date-time
+        editedAt:
+          type: string
+          format: date-time
+          nullable: true
+    MessagePost:
+      type: object
+      required: [roomId, body]
+      properties:
+        roomId:
+          type: string
+          format: uuid
+        body:
+          type: string
+          maxLength: 4000
+        clientMsgId:
+          type: string
+          description: ULID generated on client
+    MessagePatch:
+      type: object
+      properties:
+        body:
+          type: string
+          maxLength: 4000
+    InviteToken:
+      type: object
+      properties:
+        token:
+          type: string
+        roomId:
+          type: string
+          format: uuid
+        expiresAt:
+          type: string
+          format: date-time
+
+paths:
+  /auth/signup:
+    post:
+      summary: Sign up
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password, displayName]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  minLength: 8
+                displayName:
+                  type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+        '409':
+          description: Conflict (email exists)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+
+  /auth/login:
+    post:
+      summary: Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                  refreshToken:
+                    type: string
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Problem'
+
+  /rooms:
+    get:
+      summary: List rooms
+      parameters:
+        - in: query
+          name: visibility
+          schema:
+            $ref: '#/components/schemas/RoomVisibility'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Room'
+        '401':
+          description: Unauthorized
+    post:
+      summary: Create room (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, visibility]
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                visibility:
+                  $ref: '#/components/schemas/RoomVisibility'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /rooms/{roomId}:
+    get:
+      summary: Get room detail
+      parameters:
+        - in: path
+          name: roomId
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    patch:
+      summary: Update room (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                visibility:
+                  $ref: '#/components/schemas/RoomVisibility'
+                isArchived:
+                  type: boolean
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+    delete:
+      summary: Delete room (admin)
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /rooms/{roomId}/members:
+    post:
+      summary: Add member (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [userId]
+              properties:
+                userId:
+                  type: string
+                  format: uuid
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+    get:
+      summary: List members (admin)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RoomMember'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /rooms/{roomId}/members/{userId}:
+    delete:
+      summary: Remove member (admin)
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /rooms/{roomId}/messages:
+    get:
+      summary: Get messages (paginate backward)
+      parameters:
+        - in: query
+          name: before
+          schema:
+            type: string
+            description: ULID
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 50
+            maximum: 200
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+
+  /messages:
+    post:
+      summary: Post message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessagePost'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /messages/{messageId}:
+    patch:
+      summary: Edit own message
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessagePatch'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    delete:
+      summary: Delete own message
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+
+  /invites:
+    post:
+      summary: Create one-time invite token (admin)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [roomId]
+              properties:
+                roomId:
+                  type: string
+                  format: uuid
+                expiresInHours:
+                  type: integer
+                  enum: [24]
+                  default: 24
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InviteToken'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+
+  /invites/accept:
+    post:
+      summary: Accept invite link (logged-in)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token]
+              properties:
+                token:
+                  type: string
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '409':
+          description: Conflict
+
+x-error-codes:
+  400: Validation error
+  401: Not authenticated
+  403: Not authorized / private room non-member
+  404: Resource not found
+  409: Conflict
+  429: Rate limit exceeded
+  500: Server error
