@@ -55,7 +55,7 @@ export class RoomsService {
     });
     await this.prisma.room.update({
       where: { id: roomId },
-      data: { members: members as unknown as Prisma.JsonArray },
+        data: { members: members as unknown as Prisma.JsonValue },
     });
   }
 
@@ -69,7 +69,9 @@ export class RoomsService {
     const members: RoomMember[] = (room.members as any) || [];
     await this.prisma.room.update({
       where: { id: roomId },
-      data: { members: members.filter(m => m.userId !== userId) as unknown as Prisma.JsonArray },
-    });
+        data: {
+          members: members.filter(m => m.userId !== userId) as unknown as Prisma.JsonValue,
+        },
+      });
+    }
   }
-}
