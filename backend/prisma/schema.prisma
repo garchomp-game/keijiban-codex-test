@@ -11,7 +11,7 @@ model User {
   id            Int            @id @default(autoincrement())
   name          String
   email         String         @unique
-  password      String?
+  passwordHash  String?
   messages      Message[]
   rooms         RoomMember[]
   invites       Invite[]       @relation("InviteReceiver")
@@ -59,7 +59,7 @@ model Invite {
 
 model RefreshToken {
   id        Int      @id @default(autoincrement())
-  token     String   @unique
+  jti       String   @unique
   userId    Int
   expiresAt DateTime
   user      User     @relation(fields: [userId], references: [id])

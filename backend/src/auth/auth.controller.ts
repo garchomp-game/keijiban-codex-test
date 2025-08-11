@@ -1,5 +1,16 @@
 import { Controller, Post, Body, HttpCode } from '@nestjs/common';
+import { IsJWT } from 'class-validator';
 import { AuthService, SignupDto, LoginDto } from './auth.service';
+
+class RefreshDto {
+  @IsJWT()
+  refreshToken!: string;
+}
+
+class ValidateDto {
+  @IsJWT()
+  accessToken!: string;
+}
 
 @Controller('auth')
 export class AuthController {
@@ -18,14 +29,14 @@ export class AuthController {
 
   @Post('refresh')
   @HttpCode(200)
-  refresh(@Body('refreshToken') token: string) {
-    return this.authService.rotateRefreshToken(token);
+  refresh(@Body() dto: RefreshDto) {
+    return this.authService.rotateRefreshToken(dto.refreshToken);
   }
 
   @Post('validate')
   @HttpCode(200)
-  validate(@Body('accessToken') token: string) {
-    return this.authService.validateAccessToken(token);
+  validate(@Body() dto: ValidateDto) {
+    return this.authService.validateAccessToken(dto.accessToken);
   }
 
   @Post('logout')

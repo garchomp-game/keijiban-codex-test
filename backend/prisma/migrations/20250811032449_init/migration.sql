@@ -3,7 +3,7 @@ CREATE TABLE "User" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "password" TEXT
+    "passwordHash" TEXT
 );
 
 -- CreateTable
@@ -48,7 +48,7 @@ CREATE TABLE "Invite" (
 -- CreateTable
 CREATE TABLE "RefreshToken" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "token" TEXT NOT NULL,
+    "jti" TEXT NOT NULL,
     "userId" INTEGER NOT NULL,
     "expiresAt" DATETIME NOT NULL,
     CONSTRAINT "RefreshToken_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
@@ -58,4 +58,4 @@ CREATE TABLE "RefreshToken" (
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "RefreshToken_token_key" ON "RefreshToken"("token");
+CREATE UNIQUE INDEX "RefreshToken_jti_key" ON "RefreshToken"("jti");
