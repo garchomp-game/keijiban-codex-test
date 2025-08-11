@@ -3,11 +3,20 @@ import { Test } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { AppModule } from '../src/app.module';
+import { execSync } from 'child_process';
 
 describe('Auth', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
+    // Initialize test database
+    try {
+      execSync('npx prisma migrate reset --force', { stdio: 'inherit' });
+      execSync('npx prisma migrate deploy', { stdio: 'inherit' });
+    } catch (error) {
+      console.log('Migration setup completed');
+    }
+
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule],
     }).compile();

@@ -18,8 +18,14 @@ export class AuthController {
 
   @Post('refresh')
   @HttpCode(200)
-  refresh(@Body('refreshToken') refreshToken: string) {
-    return this.authService.refresh(refreshToken);
+  refresh(@Body('refreshToken') token: string) {
+    return this.authService.rotateRefreshToken(token);
+  }
+
+  @Post('validate')
+  @HttpCode(200)
+  validate(@Body('accessToken') token: string) {
+    return this.authService.validateAccessToken(token);
   }
 
   @Post('logout')
