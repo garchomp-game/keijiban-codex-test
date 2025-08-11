@@ -27,7 +27,7 @@ export class AuthService {
       throw new ConflictException('Email already exists');
     }
     const user = await this.prisma.user.create({
-      data: { email: dto.email, name: dto.displayName },
+      data: { email: dto.email, name: dto.displayName, password: dto.password },
     });
     const tokens = await this.issueTokens(user.id);
     return { userId: user.id, email: user.email, displayName: user.name, ...tokens };
