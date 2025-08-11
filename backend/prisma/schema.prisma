@@ -8,15 +8,17 @@ generator client {
 }
 
 model User {
-  id          String    @id @default(uuid())
-  email       String    @unique
-  displayName String
-  role        String    @default("user")
-  messages    Message[]
+  id            String         @id @default(uuid()) @db.Uuid
+  email         String         @unique
+  displayName   String
+  passwordHash  String
+  role          String         @default("user")
+  messages      Message[]
+  refreshTokens RefreshToken[]
 }
 
 model Room {
-  id          String    @id @default(uuid())
+  id          String    @id @default(uuid()) @db.Uuid
   name        String
   description String?
   visibility  String
@@ -28,13 +30,21 @@ model Room {
 }
 
 model Message {
-  id        String   @id @default(uuid())
-  roomId    String
-  userId    String
+  id        String   @id @default(uuid()) @db.Uuid
+  roomId    String   @db.Uuid
+  userId    String   @db.Uuid
   body      String
   status    String   @default("active")
   createdAt DateTime @default(now())
   editedAt  DateTime?
   room      Room     @relation(fields: [roomId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model RefreshToken {
+  id        String   @id @default(uuid()) @db.Uuid
+  jti       String   @unique
+  userId    String   @db.Uuid
+  expiresAt DateTime
   user      User     @relation(fields: [userId], references: [id])
 }

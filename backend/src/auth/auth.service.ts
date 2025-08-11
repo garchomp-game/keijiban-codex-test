@@ -38,7 +38,7 @@ export class AuthService {
     let user;
     try {
       user = await this.prisma.user.create({
-        data: { email: dto.email, name: dto.displayName, passwordHash },
+        data: { email: dto.email, displayName: dto.displayName, passwordHash },
       });
     } catch (e: any) {
       if (e instanceof PrismaClientKnownRequestError && e.code === 'P2002') {
@@ -46,9 +46,9 @@ export class AuthService {
       }
       throw e;
     }
-    const tokens = await this.issueTokens(user.id);
-    return { userId: user.id, email: user.email, displayName: user.name, ...tokens };
-  }
+      const tokens = await this.issueTokens(user.id);
+      return { userId: user.id, email: user.email, displayName: user.displayName, ...tokens };
+    }
 
   async login(dto: LoginDto) {
     const user = await this.prisma.user.findUnique({ where: { email: dto.email } });
@@ -62,7 +62,7 @@ export class AuthService {
     return this.issueTokens(user.id);
   }
 
-  private async issueTokens(userId: number) {
+  private async issueTokens(userId: string) {
     const accessToken = await this.jwtService.signAsync(
       { sub: userId },
       { expiresIn: '15m', issuer: 'auth', audience: 'api' },
@@ -104,8 +104,8 @@ export class AuthService {
         await this.prisma.refreshToken.delete({ where: { id: stored.id } });
         throw new UnauthorizedException('Refresh token expired');
       }
-      await this.prisma.refreshToken.delete({ where: { id: stored.id } });
-      return this.issueTokens(payload.sub);
+        await this.prisma.refreshToken.delete({ where: { id: stored.id } });
+        return this.issueTokens(payload.sub as string);
     } catch (e) {
       if (e instanceof UnauthorizedException) throw e;
       throw new UnauthorizedException('Invalid token');

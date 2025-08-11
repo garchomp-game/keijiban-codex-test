@@ -1,8 +1,10 @@
 import { PrismaClient } from '@prisma/client';
+import * as bcrypt from 'bcryptjs';
 
 const prisma = new PrismaClient();
 
 async function main() {
+  await prisma.refreshToken.deleteMany();
   await prisma.message.deleteMany();
   await prisma.room.deleteMany();
   await prisma.user.deleteMany();
@@ -11,6 +13,7 @@ async function main() {
     data: {
       email: 'alice@example.com',
       displayName: 'Alice',
+      passwordHash: await bcrypt.hash('password', 12),
     },
   });
 
