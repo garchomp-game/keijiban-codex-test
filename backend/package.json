@@ -13,7 +13,8 @@
     "lint": "echo 'No linting configured'",
     "typecheck": "tsc --noEmit",
     "prisma:generate": "prisma generate",
-    "prisma:migrate": "prisma migrate dev --name init"
+    "prisma:migrate": "prisma migrate dev",
+    "seed": "ts-node prisma/seed.ts"
   },
   "keywords": [],
   "author": "",

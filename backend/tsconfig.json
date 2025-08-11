@@ -16,6 +16,13 @@
     "types": ["node", "jest"],
     "strict": false
   },
-  "include": ["src/**/*"],
+  "include": [
+    "src/main.ts",
+    "src/app.module.ts",
+    "src/prisma/**/*.ts",
+    "src/users/**/*.ts",
+    "src/rooms/**/*.ts",
+    "src/messages/**/*.ts"
+  ],
   "exclude": ["test/**/*", "dist/**/*", "node_modules/**/*"]
 }

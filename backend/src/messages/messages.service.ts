@@ -1,53 +1,51 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { v4 as uuid } from 'uuid';
+import { PrismaService } from '../prisma/prisma.service';
 import { MessagePostDto } from './dto/message-post.dto';
 import { MessagePatchDto } from './dto/message-patch.dto';
 
-export interface Message {
-  messageId: string;
-  roomId: string;
-  userId: string;
-  body: string;
-  status: 'active' | 'deleted';
-  createdAt: string;
-  editedAt?: string | null;
-}
-
 @Injectable()
 export class MessagesService {
-  private messages: Message[] = [];
+  constructor(private prisma: PrismaService) {}
 
-  post(userId: string, dto: MessagePostDto): Message {
-    const msg: Message = {
-      messageId: uuid(),
-      roomId: dto.roomId,
-      userId,
-      body: dto.body,
-      status: 'active',
-      createdAt: new Date().toISOString(),
-      editedAt: null,
-    };
-    this.messages.push(msg);
-    return msg;
+  post(userId: string, dto: MessagePostDto) {
+    return this.prisma.message.create({
+      data: {
+        roomId: dto.roomId,
+        userId,
+        body: dto.body,
+      },
+    });
   }
 
-  patch(messageId: string, dto: MessagePatchDto): Message {
-    const msg = this.messages.find(m => m.messageId === messageId);
-    if (!msg) throw new NotFoundException();
-    if (dto.body !== undefined) {
-      msg.body = dto.body;
-      msg.editedAt = new Date().toISOString();
+  async patch(messageId: string, dto: MessagePatchDto) {
+    try {
+      return await this.prisma.message.update({
+        where: { id: messageId },
+        data: { body: dto.body, editedAt: new Date() },
+      });
+    } catch {
+      throw new NotFoundException();
     }
-    return msg;
   }
 
-  delete(messageId: string) {
-    const msg = this.messages.find(m => m.messageId === messageId);
-    if (!msg) throw new NotFoundException();
-    msg.status = 'deleted';
+  async delete(messageId: string) {
+    try {
+      await this.prisma.message.update({
+        where: { id: messageId },
+        data: { status: 'deleted' },
+      });
+    } catch {
+      throw new NotFoundException();
+    }
   }
 
-  listByRoom(roomId: string): Message[] {
-    return this.messages.filter(m => m.roomId === roomId);
+  listByRoom(roomId: string) {
+    return this.prisma.message.findMany({
+      where: { roomId, status: 'active' },
+      orderBy: { createdAt: 'asc' },
+      include: {
+        user: { select: { displayName: true } },
+      },
+    });
   }
 }

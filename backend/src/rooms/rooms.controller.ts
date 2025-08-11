@@ -1,12 +1,9 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { RoomsService } from './rooms.service';
 import { CreateRoomDto, RoomVisibility } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
 import { AddMemberDto } from './dto/add-member.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../auth/guards/roles.guard';
 
-@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller('rooms')
 export class RoomsController {
   constructor(private readonly roomsService: RoomsService) {}
@@ -33,12 +30,12 @@ export class RoomsController {
 
   @Delete(':roomId')
   remove(@Param('roomId') roomId: string) {
-    this.roomsService.delete(roomId);
+    return this.roomsService.delete(roomId);
   }
 
   @Post(':roomId/members')
   addMember(@Param('roomId') roomId: string, @Body() dto: AddMemberDto) {
-    this.roomsService.addMember(roomId, dto);
+    return this.roomsService.addMember(roomId, dto);
   }
 
   @Get(':roomId/members')
@@ -48,6 +45,6 @@ export class RoomsController {
 
   @Delete(':roomId/members/:userId')
   removeMember(@Param('roomId') roomId: string, @Param('userId') userId: string) {
-    this.roomsService.removeMember(roomId, userId);
+    return this.roomsService.removeMember(roomId, userId);
   }
 }
