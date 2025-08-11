@@ -1,5 +1,6 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { RoomsModule } from '../rooms/rooms.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
@@ -10,9 +11,14 @@ import { WsJwtAuthGuard } from './guards/ws-jwt-auth.guard';
 
 @Module({
   imports: [
-    JwtModule.register({
-      secret: 'access-secret',
-      signOptions: { expiresIn: '15m' },
+    ConfigModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => ({
+        secret: config.get('JWT_SECRET') || 'access-secret',
+        signOptions: { expiresIn: config.get('JWT_EXPIRES_IN') || '15m' },
+      }),
     }),
     forwardRef(() => RoomsModule),
   ],
