@@ -9,11 +9,15 @@
     "test": "ng test --watch=false --browsers=ChromeHeadless",
     "test:watch": "ng test",
     "lint": "ng lint",
+    "typecheck": "tsc -p tsconfig.app.json --noEmit",
     "cy:run": "cypress run",
     "e2e": "start-server-and-test start http://localhost:4200 cy:run",
     "generate:api": "openapi-typescript ../docs/openapi.yaml --output src/types/api.ts"
   },
   "private": true,
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
     "@angular/animations": "^17.3.0",
     "@angular/common": "^17.3.0",
