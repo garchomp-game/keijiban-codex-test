@@ -27,4 +27,11 @@ export class AuthController {
   validate(@Body('accessToken') token: string) {
     return this.authService.validateAccessToken(token);
   }
+
+  @Post('logout')
+  @HttpCode(200)
+  logout(@Body('refreshToken') refreshToken: string) {
+    this.authService.logout(refreshToken);
+    return { success: true };
+  }
 }

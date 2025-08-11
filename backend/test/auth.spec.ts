@@ -55,4 +55,64 @@ describe('Auth', () => {
         expect(res.body).toHaveProperty('refreshToken');
       });
   });
+
+  it('enforces single-use refresh token rotation', async () => {
+    await request(app.getHttpServer())
+      .post('/auth/signup')
+      .send({ email: 'c@example.com', password: 'password', displayName: 'Carol' })
+      .expect(201);
+
+    const loginRes = await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({ email: 'c@example.com', password: 'password' })
+      .expect(200);
+
+    const refreshToken1 = loginRes.body.refreshToken;
+
+    const refreshRes1 = await request(app.getHttpServer())
+      .post('/auth/refresh')
+      .send({ refreshToken: refreshToken1 })
+      .expect(200);
+
+    const refreshToken2 = refreshRes1.body.refreshToken;
+
+    await request(app.getHttpServer())
+      .post('/auth/refresh')
+      .send({ refreshToken: refreshToken1 })
+      .expect(401);
+
+    await request(app.getHttpServer())
+      .post('/auth/refresh')
+      .send({ refreshToken: refreshToken2 })
+      .expect(200);
+
+    await request(app.getHttpServer())
+      .post('/auth/refresh')
+      .send({ refreshToken: refreshToken2 })
+      .expect(401);
+  });
+
+  it('invalidates refresh token on logout', async () => {
+    await request(app.getHttpServer())
+      .post('/auth/signup')
+      .send({ email: 'd@example.com', password: 'password', displayName: 'Dave' })
+      .expect(201);
+
+    const loginRes = await request(app.getHttpServer())
+      .post('/auth/login')
+      .send({ email: 'd@example.com', password: 'password' })
+      .expect(200);
+
+    const refreshToken = loginRes.body.refreshToken;
+
+    await request(app.getHttpServer())
+      .post('/auth/logout')
+      .send({ refreshToken })
+      .expect(200);
+
+    await request(app.getHttpServer())
+      .post('/auth/refresh')
+      .send({ refreshToken })
+      .expect(401);
+  });
 });

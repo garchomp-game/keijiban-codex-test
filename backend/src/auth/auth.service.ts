@@ -83,4 +83,15 @@ export class AuthService {
       throw new UnauthorizedException('Invalid token');
     }
   }
+
+  async logout(refreshToken: string) {
+    try {
+      const stored = await this.prisma.refreshToken.findUnique({ where: { token: refreshToken } });
+      if (stored) {
+        await this.prisma.refreshToken.delete({ where: { id: stored.id } });
+      }
+    } catch (e) {
+      // Silent fail for logout - token might already be deleted
+    }
+  }
 }
