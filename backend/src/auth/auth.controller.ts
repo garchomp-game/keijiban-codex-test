@@ -15,4 +15,17 @@ export class AuthController {
   login(@Body() dto: LoginDto) {
     return this.authService.login(dto);
   }
+
+  @Post('refresh')
+  @HttpCode(200)
+  refresh(@Body('refreshToken') refreshToken: string) {
+    return this.authService.refresh(refreshToken);
+  }
+
+  @Post('logout')
+  @HttpCode(200)
+  logout(@Body('refreshToken') refreshToken: string) {
+    this.authService.logout(refreshToken);
+    return { success: true };
+  }
 }
