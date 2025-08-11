@@ -1,0 +1,10 @@
+{
+  "name": "tests",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "e2e": "playwright test",
+    "lint": "echo 'No linting configured'",
+    "typecheck": "echo 'No type checking configured'"
+  }
+}

@@ -7,13 +7,26 @@
     "doc": "docs"
   },
   "scripts": {
-    "test": "playwright test"
+    "test": "playwright test",
+    "dev:api": "npm --prefix backend run start:dev",
+    "dev:web": "npm --prefix frontend start",
+    "test:api": "npm --prefix backend test",
+    "test:web": "npm --prefix frontend test",
+    "e2e": "npm --prefix tests run e2e",
+    "lint": "npm -ws run lint",
+    "typecheck": "npm -ws run typecheck"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
+  "workspaces": [
+    "backend",
+    "frontend",
+    "tests"
+  ],
   "devDependencies": {
     "@playwright/test": "^1.54.2"
-  }
+  },
+  "packageManager": "npm@11.4.2"
 }
