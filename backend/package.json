@@ -9,6 +9,7 @@
     "start:prod": "node dist/main.js",
     "start:dev": "npm run start",
     "build": "tsc",
+    "pretest": "prisma generate && (prisma migrate deploy --skip-generate || prisma db push --skip-generate)",
     "test": "jest",
     "lint": "echo 'No linting configured'",
     "typecheck": "tsc --noEmit",
