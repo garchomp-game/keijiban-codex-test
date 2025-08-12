@@ -42,9 +42,14 @@ jobs:
 
       - run: npm ci --workspaces
 
-      - name: Wait for Postgres (redundant but safe)
+      - name: Wait for Postgres
         run: |
-          until pg_isready -h localhost -p 5432 -U postgres; do sleep 1; done
+          sudo apt-get install -y postgresql-client
+          until pg_isready -h localhost -p 5432 -U postgres; do 
+            echo "Waiting for postgres..."
+            sleep 2
+          done
+          echo "Postgres is ready!"
 
       - name: Prisma generate
         working-directory: backend
@@ -54,7 +59,7 @@ jobs:
         working-directory: backend
         run: |
           if [ -d "prisma/migrations" ] && [ "$(ls -A prisma/migrations)" ]; then
-            npx prisma migrate deploy --skip-generate
+            npx prisma migrate deploy
           else
             npx prisma db push --skip-generate
           fi
