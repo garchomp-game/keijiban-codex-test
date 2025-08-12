@@ -1,18 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { v4 as uuid } from 'uuid';
+import { PrismaService } from '../prisma/prisma.service';
+import { Prisma } from '@prisma/client';
 import { CreateRoomDto, RoomVisibility } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
 import { AddMemberDto } from './dto/add-member.dto';
-
-export interface Room {
-  roomId: string;
-  name: string;
-  description?: string;
-  visibility: RoomVisibility;
-  isArchived: boolean;
-  createdAt: string;
-  updatedAt: string;
-}
 
 export interface RoomMember {
   roomId: string;
@@ -23,61 +14,64 @@ export interface RoomMember {
 
 @Injectable()
 export class RoomsService {
-  private rooms: Room[] = [];
-  private members: RoomMember[] = [];
+  constructor(private prisma: PrismaService) {}
 
-  list(visibility?: RoomVisibility): Room[] {
-    return this.rooms.filter(r => !visibility || r.visibility === visibility);
+  list(visibility?: RoomVisibility) {
+    return this.prisma.room.findMany({
+      where: visibility ? { visibility } : undefined,
+    });
   }
 
-  create(dto: CreateRoomDto): Room {
-    const now = new Date().toISOString();
-    const room: Room = {
-      roomId: uuid(),
-      name: dto.name,
-      description: dto.description,
-      visibility: dto.visibility,
-      isArchived: false,
-      createdAt: now,
-      updatedAt: now,
-    };
-    this.rooms.push(room);
-    return room;
+  create(dto: CreateRoomDto) {
+    return this.prisma.room.create({ data: dto });
   }
 
-  get(roomId: string): Room {
-    const room = this.rooms.find(r => r.roomId === roomId);
+  async get(roomId: string) {
+    const room = await this.prisma.room.findUnique({ where: { id: roomId } });
     if (!room) throw new NotFoundException();
     return room;
   }
 
-  update(roomId: string, dto: UpdateRoomDto): Room {
-    const room = this.get(roomId);
-    Object.assign(room, dto);
-    room.updatedAt = new Date().toISOString();
-    return room;
+  update(roomId: string, dto: UpdateRoomDto) {
+    return this.prisma.room.update({
+      where: { id: roomId },
+      data: { ...dto },
+    });
   }
 
-  delete(roomId: string) {
-    this.rooms = this.rooms.filter(r => r.roomId !== roomId);
-    this.members = this.members.filter(m => m.roomId !== roomId);
+  async delete(roomId: string) {
+    await this.prisma.message.deleteMany({ where: { roomId } });
+    await this.prisma.room.delete({ where: { id: roomId } });
   }
 
-  addMember(roomId: string, dto: AddMemberDto) {
-    const member: RoomMember = {
+  async addMember(roomId: string, dto: AddMemberDto) {
+    const room = await this.get(roomId);
+    const members: RoomMember[] = (room.members as any) || [];
+    members.push({
       roomId,
       userId: dto.userId,
       roleInRoom: 'member',
       joinedAt: new Date().toISOString(),
-    };
-    this.members.push(member);
+    });
+    await this.prisma.room.update({
+      where: { id: roomId },
+        data: { members: members as unknown as Prisma.JsonValue },
+    });
   }
 
-  listMembers(roomId: string): RoomMember[] {
-    return this.members.filter(m => m.roomId === roomId);
+  async listMembers(roomId: string): Promise<RoomMember[]> {
+    const room = await this.get(roomId);
+    return (room.members as any) || [];
   }
 
-  removeMember(roomId: string, userId: string) {
-    this.members = this.members.filter(m => m.roomId !== roomId || m.userId !== userId);
+  async removeMember(roomId: string, userId: string) {
+    const room = await this.get(roomId);
+    const members: RoomMember[] = (room.members as any) || [];
+    await this.prisma.room.update({
+      where: { id: roomId },
+        data: {
+          members: members.filter(m => m.userId !== userId) as unknown as Prisma.JsonValue,
+        },
+      });
+    }
   }
-}

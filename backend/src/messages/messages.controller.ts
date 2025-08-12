@@ -1,11 +1,8 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { MessagesService } from './messages.service';
 import { MessagePostDto } from './dto/message-post.dto';
 import { MessagePatchDto } from './dto/message-patch.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../auth/guards/roles.guard';
 
-@UseGuards(JwtAuthGuard, RolesGuard)
 @Controller()
 export class MessagesController {
   constructor(private readonly messagesService: MessagesService) {}
@@ -16,17 +13,17 @@ export class MessagesController {
   }
 
   @Post('messages')
-  post(@Body() dto: MessagePostDto) {
+  async post(@Body() dto: MessagePostDto) {
     return this.messagesService.post('user-1', dto);
   }
 
   @Patch('messages/:messageId')
-  patch(@Param('messageId') id: string, @Body() dto: MessagePatchDto) {
+  async patch(@Param('messageId') id: string, @Body() dto: MessagePatchDto) {
     return this.messagesService.patch(id, dto);
   }
 
   @Delete('messages/:messageId')
-  remove(@Param('messageId') id: string) {
-    this.messagesService.delete(id);
+  async remove(@Param('messageId') id: string) {
+    return this.messagesService.delete(id);
   }
 }

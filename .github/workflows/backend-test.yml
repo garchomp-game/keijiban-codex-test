@@ -1,0 +1,76 @@
+name: Backend Test
+
+on:
+  pull_request:
+    paths:
+      - "backend/**"
+      - ".github/workflows/**"
+  workflow_dispatch:
+
+concurrency:
+  group: ci-backend-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: app
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd="pg_isready -U postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+
+    env:
+      NODE_ENV: test
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/app?schema=public
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - run: npm ci --workspaces
+
+      - name: Wait for Postgres
+        run: |
+          sudo apt-get install -y postgresql-client
+          for i in {1..30}; do
+            if pg_isready -h localhost -p 5432 -U postgres; then 
+              echo "Postgres is ready!"
+              exit 0
+            fi
+            echo "Waiting for postgres... (attempt $i/30)"
+            sleep 2
+          done
+          echo "Postgres failed to become ready"
+          exit 1
+
+      - name: Prisma generate
+        working-directory: backend
+        run: npx prisma generate
+
+      - name: Prepare DB schema
+        working-directory: backend
+        run: |
+          if [ -d "prisma/migrations" ] && [ "$(ls -A prisma/migrations)" ]; then
+            npx prisma migrate deploy
+          else
+            npx prisma db push --skip-generate
+          fi
+
+      - name: Run backend tests
+        run: npm test -w backend
+        env:
+          DATABASE_URL: postgresql://postgres:postgres@localhost:5432/app?schema=public
+          NODE_ENV: test

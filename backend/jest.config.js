@@ -7,5 +7,6 @@ module.exports = {
   },
   collectCoverageFrom: ['src/**/*.ts'],
   coverageDirectory: 'coverage',
-  testEnvironment: 'node'
+  testEnvironment: 'node',
+  setupFiles: ['<rootDir>/test/jest.setup.ts']
 };

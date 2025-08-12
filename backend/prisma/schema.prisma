@@ -1,6 +1,6 @@
 datasource db {
-  provider = "sqlite"
-  url      = "file:./dev.db"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 generator client {
@@ -8,59 +8,43 @@ generator client {
 }
 
 model User {
-  id            Int            @id @default(autoincrement())
-  name          String
+  id            String         @id @default(uuid()) @db.Uuid
   email         String         @unique
-  passwordHash  String?
+  displayName   String
+  passwordHash  String
+  role          String         @default("user")
   messages      Message[]
-  rooms         RoomMember[]
-  invites       Invite[]       @relation("InviteReceiver")
-  sentInvites   Invite[]       @relation("InviteSender")
   refreshTokens RefreshToken[]
 }
 
 model Room {
-  id       Int        @id @default(autoincrement())
-  name     String
-  messages Message[]
-  members  RoomMember[]
-  invites  Invite[]
+  id          String    @id @default(uuid()) @db.Uuid
+  name        String
+  description String?
+  visibility  String
+  isArchived  Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  members     Json      @default("[]")
+  messages    Message[]
 }
 
 model Message {
-  id        Int      @id @default(autoincrement())
-  content   String
+  id        String   @id @default(uuid()) @db.Uuid
+  roomId    String   @db.Uuid
+  userId    String   @db.Uuid
+  body      String
+  status    String   @default("active")
   createdAt DateTime @default(now())
-  roomId    Int
-  userId    Int
+  editedAt  DateTime?
   room      Room     @relation(fields: [roomId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
 }
 
-model RoomMember {
-  id     Int  @id @default(autoincrement())
-  roomId Int
-  userId Int
-  role   String
-  room   Room @relation(fields: [roomId], references: [id])
-  user   User @relation(fields: [userId], references: [id])
-}
-
-model Invite {
-  id         Int  @id @default(autoincrement())
-  roomId     Int
-  senderId   Int
-  receiverId Int
-  status     String
-  room       Room @relation(fields: [roomId], references: [id])
-  sender     User @relation("InviteSender", fields: [senderId], references: [id])
-  receiver   User @relation("InviteReceiver", fields: [receiverId], references: [id])
-}
-
 model RefreshToken {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid()) @db.Uuid
   jti       String   @unique
-  userId    Int
+  userId    String   @db.Uuid
   expiresAt DateTime
   user      User     @relation(fields: [userId], references: [id])
 }
