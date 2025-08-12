@@ -11,10 +11,37 @@ describe('Auth', () => {
   beforeAll(async () => {
     // Initialize test database
     try {
-      execSync('npx prisma migrate reset --force', { stdio: 'inherit' });
-      execSync('npx prisma migrate deploy', { stdio: 'inherit' });
+      console.log('Setting up test database...');
+      console.log('DATABASE_URL in test:', !!process.env.DATABASE_URL);
+      
+      execSync('npx prisma migrate reset --force', { 
+        stdio: 'inherit',
+        env: { ...process.env },
+        cwd: __dirname + '/..'
+      });
+      execSync('npx prisma migrate deploy', { 
+        stdio: 'inherit',
+        env: { ...process.env },
+        cwd: __dirname + '/..'
+      });
+      
+      console.log('Database setup completed successfully');
     } catch (error) {
-      console.log('Migration setup completed');
+      console.error('Database setup failed:', error);
+      console.log('Attempting alternative setup...');
+      
+      // Alternative: try with db push
+      try {
+        execSync('npx prisma db push --force-reset', { 
+          stdio: 'inherit',
+          env: { ...process.env },
+          cwd: __dirname + '/..'
+        });
+        console.log('Alternative database setup completed');
+      } catch (altError) {
+        console.error('Alternative setup also failed:', altError);
+        throw altError;
+      }
     }
 
     const moduleRef = await Test.createTestingModule({
